@@ -8,7 +8,7 @@ export default class screen1 extends React.Component {
 
 
     _goScreen2(){
-        Actions.screen2({texto: 'Texto de prueba'});
+        Actions.screen2({texto: 'Texto de prueba' , title: 'Titulo de prueba'});
     }
 
 
@@ -20,7 +20,7 @@ export default class screen1 extends React.Component {
             Pantalla 1
         </Text>
         <Button
-            title= 'Ir a pantalla 2'
+            title= 'Ir a pantalla 2 chato'
             onPress={()=> this._goScreen2()}
         />
         
