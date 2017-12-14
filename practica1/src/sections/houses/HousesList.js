@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {  View , Text, FlatList, Button } from 'react-native';
+import {  View , Text, FlatList, Button , StyleSheet} from 'react-native';
+import { AsynCalls } from '../../commons' 
 
-import axios from 'axios'
 
 export default class HousesList extends Component {
 
@@ -16,16 +16,6 @@ export default class HousesList extends Component {
 
     componentWillMount(){
         
-        //consumimos el web service
-        axios.get('http://146.185.137.85/got/web/casas')
-        .then((response)  => {
-          console.log(response.data.records);
-          //asignamos los valores de la lista  
-          this.setState({ list: response.data && response.data.records ? response.data.records : []})
-        })
-        .catch((error) => {
-          console.log(error);
-        });
         
     }
 
@@ -34,30 +24,45 @@ export default class HousesList extends Component {
 
         return (
             <View>
-                <Text>{nombre}</Text>
+                <Text style={styles.title}>{nombre}</Text>
                 <FlatList
                 data={ this.state.list }
-                renderItem = {({item}) => this.renderItem(item)}
-
-                
+                renderItem = {({item, index}) => this.renderItem(item, index)}
+                keyExtractor = {(item, index) => item.id}
+                extraData = {this.state} //para que se entere del render de la lista
+ 
             />
             </View>
         )
     }
     //render item cell del FlatList
-    renderItem(item){
+    renderItem(item, index){
+
+        const cellstyle = this.checkIsselected(item)
+
         return(
-            <View style={{height: 120, backgroundColor: 'blue', marginVertical: 1}}>
-                <Text>{item.nombre}</Text>
+            <View style={[styles.cell, cellstyle]} >
+                <Text style={{fontSize: 20}}>{item.nombre}</Text>
                 <Button  
-                    title={'Hazme Click'}
+                    title={'Hazme Clickg'}
                     onPress={() => this.setState({selected: item})}
                 />
-                
             </View>
-
         )
-           
+    }
+
+
+    checkIsselected(item){
+        if ( this.state.selected && this.state.selected.id == item.id ){
+            return {backgroundColor: 'blue'}
+        }
+        else{
+            return {backgroundColor: 'grey'}
+        }
+    }
+
+
+    checkItemStyle(){
         
     }
 
@@ -67,3 +72,16 @@ export default class HousesList extends Component {
     }
 
 }    
+
+
+const styles = StyleSheet.create({
+    cell:{
+        height: 120, 
+        marginVertical: 1
+    },
+    title: {
+        fontSize: 20,
+        textAlign: 'center',
+        marginVertical: 20
+    }
+})
